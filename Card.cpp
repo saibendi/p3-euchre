@@ -107,38 +107,52 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
 //   operator!=
 
 //EFFECTS Initializes Card to the Two of Spades
+// TEST CASES:  - TEST 1:
+//              - TEST 2:
+//              - TEST 3:
 Card::Card(){
     rank = TWO;
     suit = SPADES;
 }
 
 //EFFECTS Initializes Card to specified rank and suit
+// TEST CASES:  - TEST 1:
+//              - TEST 2:
+//              - TEST 3:
 Card::Card(Rank rank_in, Suit suit_in) {
     rank = rank_in;
     suit = suit_in;
 }
 
 //EFFECTS Returns the rank
+// TEST CASES:  - TEST 1:
+//              - TEST 2:
+//              - TEST 3:
 Rank Card::get_rank() const {
     return rank;
 }
 
 //EFFECTS Returns the suit.  Does not consider trump.
+// TEST CASES:  - TEST 1:
+//              - TEST 2:
+//              - TEST 3:
 Suit Card::get_suit() const {
     return suit;
 }
 
 //EFFECTS Returns the suit
 //HINT: the left bower is the trump suit!
+// TEST CASES:  - TEST 1:
+//              - TEST 2:
+//              - TEST 3:
 Suit Card::get_suit(Suit trump) const {
-    // how do we know what the trump suit is
-    // player needs to order up trump based on upcard
-    // if everyone rejects upcard, then at least two of face cards for any suit other than the upcard's suit
-    // player can order up trump
     assert(false);
 }
 
 //EFFECTS Returns true if card is a face card (Jack, Queen, King or Ace)
+// TEST CASES:  - TEST 1:
+//              - TEST 2:
+//              - TEST 3:
 bool Card::is_face_or_ace() const {
     // suit doesn't matter at all
     // if rank = jack, queen, king or ace
@@ -148,6 +162,9 @@ bool Card::is_face_or_ace() const {
 }
 
 //EFFECTS Returns true if card is the Jack of the trump suit
+// TEST CASES:  - TEST 1:
+//              - TEST 2:
+//              - TEST 3:
 bool Card::is_right_bower(Suit trump) const {
     if (suit == trump && rank == JACK)
         return true;
@@ -155,6 +172,9 @@ bool Card::is_right_bower(Suit trump) const {
 }
 
 //EFFECTS Returns true if card is the Jack of the next suit
+// TEST CASES:  - TEST 1:
+//              - TEST 2:
+//              - TEST 3:
 bool Card::is_left_bower(Suit trump) const {
     if ((trump == HEARTS && suit == DIAMONDS) || (trump == DIAMONDS && suit == HEARTS)) {
         if (rank == JACK) {
@@ -189,18 +209,18 @@ std::ostream & operator<<(std::ostream &os, const Card &card) {
 //EFFECTS Reads a Card from a stream in the format "Two of Spades"
 //NOTE The Card class declares this operator>> "friend" function,
 //     which means it is allowed to access card.rank and card.suit.
+// TEST CASES:  - TEST 1:
+//              - TEST 2:
+//              - TEST 3:
 std::istream & operator>>(std::istream &is, Card &card) {
-    string str;
-    if (is >> str) {
-        
-    }
     assert(false);
 }
 
 //EFFECTS Returns true if lhs is lower value than rhs.
 //  Does not consider trump.
-// TEST CASES: - TEST 1: lhs = ace and rhs = two,   OUT: false
-//             - TEST 2: lhs = ace and rhs = ace,   OUT: false
+// TEST CASES:  - TEST 1: lhs = ace, clubs < rhs = ace, clubs   OUT: false
+//              - TEST 2: lhs = ace, clubs < rhs = ace, hearts   OUT: false
+//              - TEST 3: lhs = two, clubs < rhs = ace, clubs   OUT: true
 bool operator<(const Card &lhs, const Card &rhs) {
     if (lhs.get_suit() < rhs.get_suit()) {
         return true;
@@ -213,56 +233,219 @@ bool operator<(const Card &lhs, const Card &rhs) {
             return false;
         }
     }
-    // the else condition is if lhs.get_suit() > rhs.get_suit(), in which case you return false
+    // the else condition is if lhs.get_suit() >= rhs.get_suit(), in which case you return false
     return false;
 }
 
 //EFFECTS Returns true if lhs is lower value than rhs or the same card as rhs.
 //  Does not consider trump.
+// TEST CASES:  - TEST 1: lhs = ace, clubs <= rhs = ace, clubs   OUT: true
+//              - TEST 2: lhs = ace, clubs <= rhs = ace, hearts   OUT: false
+//              - TEST 3: lhs = two, clubs <= rhs = ace, clubs   OUT: true
 bool operator<=(const Card &lhs, const Card &rhs) {
-    if (lhs.get_rank() < rhs.get_rank()) {
+    if (lhs.get_suit() < rhs.get_suit()) {
         return true;
     }
+    else if (lhs.get_suit() == rhs.get_suit()) {
+        if (lhs.get_rank() <= rhs.get_rank()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    // the else condition is if lhs.get_suit() > rhs.get_suit(), in which case you return false
     return false;
 }
 
 //EFFECTS Returns true if lhs is higher value than rhs.
 //  Does not consider trump.
+// TEST CASES:  - TEST 1: lhs = two, diamonds > rhs = ace, clubs    OUT: true
+//              - TEST 2: lhs = ace, diamonds > rhs = two, diamonds    OUT: true
+//              - TEST 3: lhs = ace, diamonds > rhs = ace, diamonds     OUT: false
 bool operator>(const Card &lhs, const Card &rhs) {
-    assert(false);
+    // Solution 1: Using implementation for '<' and '<='
+    if (!(lhs <= rhs))
+        return true;
+    return false;
+    
+    /* Solution 2: New implementation from scratch
+    if (lhs.get_suit() > rhs.get_suit()) {
+        return true;
+    }
+    else if (lhs.get_suit() == rhs.get_suit()) {
+        if (lhs.get_rank() > rhs.get_rank()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    // the else condition is if lhs.get_suit() <= rhs.get_suit(), in which case you return false
+    return false;
+     */
 }
 
 //EFFECTS Returns true if lhs is higher value than rhs or the same card as rhs.
 //  Does not consider trump.
+// TEST CASES:  - TEST 1: lhs = two, diamonds >= rhs = ace, clubs    OUT: true
+//              - TEST 2: lhs = ace, diamonds >= rhs = two, diamonds    OUT: true
+//              - TEST 3: lhs = ace, diamonds >= rhs = ace, diamonds     OUT: true
 bool operator>=(const Card &lhs, const Card &rhs) {
-    assert(false);
+    // Solution 1: Using implementation for '<' and '<='
+    if (!(lhs < rhs))
+        return true;
+    return false;
+    
+    /* Solution 2: New implementation from scratch
+    if (lhs.get_suit() > rhs.get_suit()) {
+        return true;
+    }
+    else if (lhs.get_suit() == rhs.get_suit()) {
+        if (lhs.get_rank() >= rhs.get_rank()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    // the else condition is if lhs.get_suit() < rhs.get_suit(), in which case you return false
+    return false;
+     */
 }
 
 //EFFECTS Returns true if lhs is same card as rhs.
 //  Does not consider trump.
+// TEST CASES: done
 bool operator==(const Card &lhs, const Card &rhs) {
-    assert(false);
+    if (lhs.get_suit() == rhs.get_suit()) {
+        if (lhs.get_rank() == rhs.get_rank()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 //EFFECTS Returns true if lhs is not the same card as rhs.
 //  Does not consider trump.
+// TEST CASES: done
 bool operator!=(const Card &lhs, const Card &rhs) {
-    assert(false);
+    if (!(lhs == rhs))
+        return true;
+    return false;
 }
 
 //EFFECTS returns the next suit, which is the suit of the same color
+// TEST CASES:  - TEST 1: if suit = Diamonds    OUT: hearts
+//              - TEST 2: if suit = Hearts      OUT: diamonds
+//              - TEST 3: if suit = spades      OUT: clubs
 Suit Suit_next(Suit suit) {
-    assert(false);
+    if (suit == DIAMONDS) {
+        return HEARTS;
+    }
+    else if (suit == HEARTS) {
+        return DIAMONDS;
+    }
+    else if (suit == CLUBS) {
+        return SPADES;
+    }
+    else {
+        return CLUBS;
+    }
 }
 
 //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
 // order, as described in the spec.
+// TEST CASES:  - TEST 1: trump = clubs AND a = Jack, Spades < b = Ace, clubs   OUT = false;
+//              - TEST 2: trump = clubs AND a = Ace, clubs < a = Jack, Spades      OUT = true;
+//              - TEST 3: trump = clubs AND a = 5, hearts < b = 2, diamonds         OUT = true;
 bool Card_less(const Card &a, const Card &b, Suit trump) {
-    assert(false);
+    // Card a is trump, Card b is trump
+        // ex: let's say trump = clubs
+                // right bower suit = clubs
+                // left_bower suit = spades
+    if (a.is_trump(trump) && b.is_trump(trump)) {
+        if (a.is_right_bower(trump)) {  // if a is right bower, b cannot be greater than a
+            return false;
+        }
+        else if (b.is_right_bower(trump)) { // if b is right bower, a has to be less than b
+            return true;
+        }
+        // at this point neither cards are right bower
+        else if (a.is_left_bower(trump)){
+            return false;
+        }
+        else if (b.is_left_bower(trump)) {
+            return true;
+        }
+        // at this point neither cards are left bower, so we compare normally
+        else {
+            if (a < b) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+    // Card a is trump, Card b is NOT trump
+        // if a is trump and b isn't, then a > b, so return false
+    else if (a.is_trump(trump) && !(b.is_trump(trump))) {
+        return false;
+    }
+    // Card a is NOT trump, Card b is trump
+        // if a isn't trump and b is, then a < b, so return true
+    else if (!(a.is_trump(trump)) && b.is_trump(trump)) {
+        return true;
+    }
+    // Card a is NOT trump, Card b is NOT trump
+        // if neither cards are trump, we just follow normal behavior
+    else {
+        if (a < b) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    return false;
 }
 
 //EFFECTS Returns true if a is lower value than b.  Uses both the trump suit
 //  and the suit led to determine order, as described in the spec.
+// TEST CASES:  - TEST 1: trump = clubs AND a = Jack, Spades < b = Ace, clubs   OUT = false;
+//              - TEST 2: trump = clubs AND a = Ace, clubs < a = Jack, Spades      OUT = true;
+//              - TEST 3: trump = clubs, led card = Hearts, AND a = Jack, diamonds < b = 10, hearts         OUT = true;
 bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump) {
-    assert(false);
+    Suit card_a_suit = a.get_suit();
+    Suit card_b_suit = b.get_suit();
+    Suit led_card_suit = led_card.get_suit();
+    
+    // if at least one card is a trump card, then I don't care what the led_card suit is
+    // this condition also takes care of when led_card suit == trump suit; if led_card suit is trump suit - I don't care about led card
+    if (card_a_suit == trump || card_b_suit == trump) {
+        return Card_less(a, b, trump);
+    }
+    // if neither cards are trump - this is when I care about led_card
+    else {
+        // a and b aren't trump cards
+        // a is led card, b isn't
+        if ((card_a_suit == led_card_suit) && (card_b_suit != led_card_suit)) {
+            return false;
+        }
+        // a and b aren't trump cards
+        // a isn't led card, b is
+        else if ((card_a_suit != led_card_suit) && (card_b_suit == led_card_suit)) {
+            return true;
+        }
+        // a and b aren't trump cards
+        // both are ledcard suits or both are not led card suits
+        else {
+            if (a < b)
+                return true;
+            else
+                return false;
+        }
+    }
+    return false;
 }

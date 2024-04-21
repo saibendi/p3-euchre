@@ -30,14 +30,14 @@ TEST(test_card_type) {
 TEST(test_card_self_comparison) {
     Card three_spades = Card(THREE, SPADES);
     ASSERT_FALSE(three_spades < three_spades);
-    //ASSERT_TRUE(three_spades <= three_spades);
-    //ASSERT_FALSE(three_spades > three_spades);
-    //ASSERT_TRUE(three_spades >= three_spades);
-    //ASSERT_TRUE(three_spades == three_spades);
-    //ASSERT_FALSE(three_spades != three_spades);
+    ASSERT_TRUE(three_spades <= three_spades);
+    ASSERT_FALSE(three_spades > three_spades);
+    ASSERT_TRUE(three_spades >= three_spades);
+    ASSERT_TRUE(three_spades == three_spades);
+    ASSERT_FALSE(three_spades != three_spades);
 }
 
-/*
+
 TEST(test_Suit_next) {
     ASSERT_EQUAL(Suit_next(CLUBS), SPADES);
 }
@@ -48,8 +48,6 @@ TEST(test_Card_less_self) {
     ASSERT_FALSE(Card_less(three_spades, three_spades, three_spades,
                            CLUBS));
 }
-
-*/
 
 TEST(test_card_insertion) {
     Card three_spades = Card(THREE, SPADES);
