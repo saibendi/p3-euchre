@@ -56,12 +56,11 @@ TEST(test_card_insertion) {
     ASSERT_EQUAL(oss.str(), "Three of Spades");
 }
 
-/*
 TEST(test_card_extraction) {
     istringstream iss("Three of Spades");
     Card c;
     iss >> c;
     ASSERT_EQUAL(c, Card(THREE, SPADES));
 }
-*/
+
 TEST_MAIN()

@@ -209,11 +209,15 @@ std::ostream & operator<<(std::ostream &os, const Card &card) {
 //EFFECTS Reads a Card from a stream in the format "Two of Spades"
 //NOTE The Card class declares this operator>> "friend" function,
 //     which means it is allowed to access card.rank and card.suit.
-// TEST CASES:  - TEST 1:
-//              - TEST 2:
-//              - TEST 3:
 std::istream & operator>>(std::istream &is, Card &card) {
-    assert(false);
+    string rankStr;
+    string ofStr;
+    string suitStr;
+    if (is >> rankStr >> ofStr >> suitStr) {
+        card.rank = string_to_rank(rankStr);
+        card.suit = string_to_suit(suitStr);
+    }
+    return is;
 }
 
 //EFFECTS Returns true if lhs is lower value than rhs.
@@ -269,7 +273,7 @@ bool operator>(const Card &lhs, const Card &rhs) {
         return true;
     return false;
     
-    /* Solution 2: New implementation from scratch
+    /* Solution 2: implementation from scratch
     if (lhs.get_suit() > rhs.get_suit()) {
         return true;
     }
@@ -297,7 +301,7 @@ bool operator>=(const Card &lhs, const Card &rhs) {
         return true;
     return false;
     
-    /* Solution 2: New implementation from scratch
+    /* Solution 2: implementation from scratch
     if (lhs.get_suit() > rhs.get_suit()) {
         return true;
     }
@@ -360,25 +364,49 @@ Suit Suit_next(Suit suit) {
 //              - TEST 2: trump = clubs AND a = Ace, clubs < a = Jack, Spades      OUT = true;
 //              - TEST 3: trump = clubs AND a = 5, hearts < b = 2, diamonds         OUT = true;
 bool Card_less(const Card &a, const Card &b, Suit trump) {
-    // Card a is trump, Card b is trump
+    //assert(a != b);
+    // Make sure that a and b aren't the same cards
+    if (a != b) {
+        // Card a is trump, Card b is trump
         // ex: let's say trump = clubs
-                // right bower suit = clubs
-                // left_bower suit = spades
-    if (a.is_trump(trump) && b.is_trump(trump)) {
-        if (a.is_right_bower(trump)) {  // if a is right bower, b cannot be greater than a
+        // right bower suit = clubs
+        // left_bower suit = spades
+        if (a.is_trump(trump) && b.is_trump(trump)) {
+            if (a.is_right_bower(trump)) {  // if a is right bower, b cannot be greater than a
+                return false;
+            }
+            else if (b.is_right_bower(trump)) { // if b is right bower, a has to be less than b
+                return true;
+            }
+            // at this point neither cards are right bower
+            else if (a.is_left_bower(trump)){
+                return false;
+            }
+            else if (b.is_left_bower(trump)) {
+                return true;
+            }
+            // at this point neither cards are left bower, so we compare normally
+            else {
+                if (a < b) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        // Card a is trump, Card b is NOT trump
+        // if a is trump and b isn't, then a > b, so return false
+        else if (a.is_trump(trump) && !(b.is_trump(trump))) {
             return false;
         }
-        else if (b.is_right_bower(trump)) { // if b is right bower, a has to be less than b
+        // Card a is NOT trump, Card b is trump
+        // if a isn't trump and b is, then a < b, so return true
+        else if (!(a.is_trump(trump)) && b.is_trump(trump)) {
             return true;
         }
-        // at this point neither cards are right bower
-        else if (a.is_left_bower(trump)){
-            return false;
-        }
-        else if (b.is_left_bower(trump)) {
-            return true;
-        }
-        // at this point neither cards are left bower, so we compare normally
+        // Card a is NOT trump, Card b is NOT trump
+        // if neither cards are trump, we just follow normal behavior
         else {
             if (a < b) {
                 return true;
@@ -386,26 +414,6 @@ bool Card_less(const Card &a, const Card &b, Suit trump) {
             else {
                 return false;
             }
-        }
-    }
-    // Card a is trump, Card b is NOT trump
-        // if a is trump and b isn't, then a > b, so return false
-    else if (a.is_trump(trump) && !(b.is_trump(trump))) {
-        return false;
-    }
-    // Card a is NOT trump, Card b is trump
-        // if a isn't trump and b is, then a < b, so return true
-    else if (!(a.is_trump(trump)) && b.is_trump(trump)) {
-        return true;
-    }
-    // Card a is NOT trump, Card b is NOT trump
-        // if neither cards are trump, we just follow normal behavior
-    else {
-        if (a < b) {
-            return true;
-        }
-        else {
-            return false;
         }
     }
     return false;
@@ -421,30 +429,34 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump) {
     Suit card_b_suit = b.get_suit();
     Suit led_card_suit = led_card.get_suit();
     
-    // if at least one card is a trump card, then I don't care what the led_card suit is
-    // this condition also takes care of when led_card suit == trump suit; if led_card suit is trump suit - I don't care about led card
-    if (card_a_suit == trump || card_b_suit == trump) {
-        return Card_less(a, b, trump);
-    }
-    // if neither cards are trump - this is when I care about led_card
-    else {
-        // a and b aren't trump cards
-        // a is led card, b isn't
-        if ((card_a_suit == led_card_suit) && (card_b_suit != led_card_suit)) {
-            return false;
+    //assert(a != b && b != led_card && led_card != a);
+    // Make sure that a, b and led_card are all different cards
+    if (a != b && b != led_card && led_card != a) {
+        // if at least one card is a trump card, then I don't care what the led_card suit is
+        // this condition also takes care of when led_card suit == trump suit; if led_card suit is trump suit - I don't care about led card
+        if (a.is_trump(trump) || b.is_trump(trump)) {
+            return Card_less(a, b, trump);
         }
-        // a and b aren't trump cards
-        // a isn't led card, b is
-        else if ((card_a_suit != led_card_suit) && (card_b_suit == led_card_suit)) {
-            return true;
-        }
-        // a and b aren't trump cards
-        // both are ledcard suits or both are not led card suits
+        // if neither cards are trump - this is when I care about led_card
         else {
-            if (a < b)
-                return true;
-            else
+            // a and b aren't trump cards
+            // a is led card, b isn't
+            if ((card_a_suit == led_card_suit) && (card_b_suit != led_card_suit)) {
                 return false;
+            }
+            // a and b aren't trump cards
+            // a isn't led card, b is
+            else if ((card_a_suit != led_card_suit) && (card_b_suit == led_card_suit)) {
+                return true;
+            }
+            // a and b aren't trump cards
+            // both are ledcard suits or both are not led card suits
+            else {
+                if (a < b)
+                    return true;
+                else
+                    return false;
+            }
         }
     }
     return false;
