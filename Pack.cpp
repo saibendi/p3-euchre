@@ -1,6 +1,8 @@
 #include "Pack.hpp"
 #include <array>
 #include <string>
+//#include <iostream>
+#include <sstream>
 
 using namespace std;
 
@@ -25,14 +27,14 @@ Pack::Pack() {
     // enum Suit and enum Rank are global variables
     // iterate through and start with spades
         // set suit = spades
-    int card_number = 0;
+    int card_index = 0;
     for (int s = SPADES; s <= DIAMONDS; ++s) {
         Suit suit = static_cast<Suit>(s);   // assigning suit
         for (int r = NINE; r <= ACE; ++r) {
             Rank rank = static_cast<Rank>(r);
-            cards[card_number] = Card(rank,suit);
+            cards[card_index] = Card(rank,suit);
             //std::cout << "Card " << card_number + 1 << " is: " << cards[card_number] << std::endl;
-            card_number++;
+            card_index++;
         }
     }
 }
@@ -43,18 +45,60 @@ Pack::Pack() {
 // EFFECTS: Initializes Pack by reading from pack_input.
 // NOTE: The pack is initially full, with no cards dealt.
 Pack::Pack(std::istream& pack_input) {
-    assert(false);
+    
+    int card_index = 0;
+    // while not end of file, keep reading
+    while (!pack_input.eof()) {
+        string RankOfSuit;
+        string r;
+        string of;
+        string s;
+        Rank rank_in = TWO;     // safety check - if you see a two of spades you know something's wrong
+        Suit suit_in = SPADES;  // safety check - if you see a two of spades you know something's wrong
+        
+        getline(pack_input, RankOfSuit);
+        // cout << "This is RankOfSuit: " << RankOfSuit << endl;
+        istringstream iss(RankOfSuit); // create a string stream from RankOfSuit
+        //cout << card_index + 1 << endl; // displaying card number
+
+        /* METHOD A: INCORRECT - doesn't work because after card 24, the RankOfSuit stores a value of nothing and feeds that into r, of and s
+        iss >> r;
+        cout << "This is r: " << r << endl;
+        rank_in = string_to_rank(r);
+        iss >> of;
+        cout << "This is of: " << of << endl;
+        iss >> s;
+        cout << "This is s: " << s << endl;
+        suit_in = string_to_suit(s);
+        */
+        
+        // METHOD B:
+        if (iss >> r) {  // extracting Rank from string stream
+            // cout << "This is r: " << r << endl;
+            rank_in = string_to_rank(r);
+        }
+        if (iss >> of) {    // extracting Of from string stream
+            // cout << "This is of: " << of << endl;
+        }
+        if (iss >> s) {  // extracting Suit from string stream
+            // cout << "This is s: " << s << endl;
+            suit_in = string_to_suit(s);
+        }
+         
+        cards[card_index] = Card(rank_in,suit_in);
+        ++card_index;
+    }
 }
 
 // REQUIRES: cards remain in the Pack
 // EFFECTS: Returns the next card in the pack and increments the next index
 // QUESTIONS: - can we initialize next variable in the private part of class?
 Card Pack::deal_one() {
-    Card cardToDeal;    // default constructor initializes this to Two of Spades
+    Card cardIndexToDeal;    // default constructor initializes this to Two of Spades
     if (next <= 23) {
-        cardToDeal = cards[next];
+        cardIndexToDeal = cards[next];
         next++;
-        return cardToDeal;
+        return cardIndexToDeal;
     }
     
     cout << "No more cards left to deal" << endl;
@@ -108,20 +152,20 @@ void Pack::shuffle() {
     // shuffle 7 times
     for (int shuffle_count = 0; shuffle_count < NUM_TIMES_SHUFFLE; ++shuffle_count) {
         temp_cards = cards;
-        int card_number = 0;
-        int odd_card_number = 1;
+        int card_index = 0;
+        int odd_card_index = 1;
         //for (card_number = 0; card_number < (PACK_SIZE / 2); ++card_number) {
-        while (card_number < PACK_SIZE / 2) {
-            cards[odd_card_number] = temp_cards[card_number];
-            odd_card_number = odd_card_number + 2;
-            ++card_number;
+        while (card_index < PACK_SIZE / 2) {
+            cards[odd_card_index] = temp_cards[card_index];
+            odd_card_index = odd_card_index + 2;
+            ++card_index;
         }
-        int even_card_number = 0;
+        int even_card_index = 0;
         //for (int second_half = 12; second_half < (PACK_SIZE); ++second_half) {
-        while (card_number < PACK_SIZE) {
-            cards[even_card_number] = temp_cards[card_number];
-            even_card_number = even_card_number + 2;
-            ++card_number;
+        while (card_index < PACK_SIZE) {
+            cards[even_card_index] = temp_cards[card_index];
+            even_card_index = even_card_index + 2;
+            ++card_index;
         }
     }
 }

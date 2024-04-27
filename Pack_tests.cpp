@@ -2,6 +2,7 @@
 #include "unit_test_framework.hpp"
 
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -54,6 +55,23 @@ TEST(test_shuffle) {
         Card new_card = pack.deal_one();
         cout << "Card " << i << " is: " << new_card << endl;
     }
+}
+
+// TODO: create new file (test_pack.in) with different order of cards and test that
+TEST(test_istream_ctor) {
+    // Your implementation may assume any pack input is formatted correctly, with exactly 24 unique and correctly formatted cards.
+    string filename = "pack.in";
+    ifstream file(filename);
+    if (!file.is_open()) {
+        cout << "opening file failed!" << endl;
+        exit(1);
+    }
+    Pack pack(file);
+    Card new_card = pack.deal_one();
+    ASSERT_EQUAL(new_card, Card(NINE, SPADES));
+    Card next_card = pack.deal_one();
+    ASSERT_EQUAL(next_card, Card(TEN, SPADES));
+
 }
 
 

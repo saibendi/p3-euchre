@@ -23,6 +23,7 @@ TEST(test_pack_istream_ctor) {
   assert(ifs.is_open());
   Pack pack(ifs);
   Card first_card = pack.deal_one();
+    cout << first_card << endl;;
   ASSERT_EQUAL(first_card, Card(NINE, SPADES));
 }
 
