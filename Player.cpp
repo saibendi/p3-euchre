@@ -44,7 +44,7 @@ public:
     virtual bool make_trump(const Card &upcard, bool is_dealer,
                             int round, Suit &order_up_suit) const {
         Suit upcard_suit = upcard.get_suit();
-        Suit next_suit = upcard.get_suit(upcard_suit);
+        Suit next_suit = Suit_next(upcard_suit);
 
         if (round == 1) {
             int counter = 0;

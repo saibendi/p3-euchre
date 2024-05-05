@@ -237,11 +237,11 @@ std::istream & operator>>(std::istream &is, Card &card) {
 //              - TEST 2: lhs = ace, clubs < rhs = ace, hearts   OUT: false
 //              - TEST 3: lhs = two, clubs < rhs = ace, clubs   OUT: true
 bool operator<(const Card &lhs, const Card &rhs) {
-    if (lhs.get_suit() < rhs.get_suit()) {
+    if (lhs.get_rank() < rhs.get_rank()) {
         return true;
     }
-    else if (lhs.get_suit() == rhs.get_suit()) {
-        if (lhs.get_rank() < rhs.get_rank()) {
+    else if (lhs.get_rank() == rhs.get_rank()) {
+        if (lhs.get_suit() < rhs.get_suit()) {
             return true;
         }
         else {
@@ -258,18 +258,18 @@ bool operator<(const Card &lhs, const Card &rhs) {
 //              - TEST 2: lhs = ace, clubs <= rhs = ace, hearts   OUT: false
 //              - TEST 3: lhs = two, clubs <= rhs = ace, clubs   OUT: true
 bool operator<=(const Card &lhs, const Card &rhs) {
-    if (lhs.get_suit() < rhs.get_suit()) {
+    if (lhs.get_rank() < rhs.get_rank()) {
         return true;
     }
-    else if (lhs.get_suit() == rhs.get_suit()) {
-        if (lhs.get_rank() <= rhs.get_rank()) {
+    else if (lhs.get_rank() == rhs.get_rank()) {
+        if (lhs.get_suit() <= rhs.get_suit()) {
             return true;
         }
         else {
             return false;
         }
     }
-    // the else condition is if lhs.get_suit() > rhs.get_suit(), in which case you return false
+    // the else condition is if lhs.get_suit() >= rhs.get_suit(), in which case you return false
     return false;
 }
 
@@ -333,10 +333,8 @@ bool operator>=(const Card &lhs, const Card &rhs) {
 //  Does not consider trump.
 // TEST CASES: done
 bool operator==(const Card &lhs, const Card &rhs) {
-    if (lhs.get_suit() == rhs.get_suit()) {
-        if (lhs.get_rank() == rhs.get_rank()) {
-            return true;
-        }
+    if (lhs.get_suit() == rhs.get_suit() && lhs.get_rank() == rhs.get_rank()) {
+        return true;
     }
     return false;
 }

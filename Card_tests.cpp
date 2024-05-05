@@ -36,8 +36,8 @@ TEST(test_greater_than_AND_greater_than_or_equal_to) {
     // Test 1:
     Card TwoOfDiamonds(TWO,DIAMONDS);
     Card AceOfClubs(ACE,CLUBS);
-    ASSERT_EQUAL(TwoOfDiamonds > AceOfClubs, true);
-    ASSERT_EQUAL(TwoOfDiamonds >= AceOfClubs, true);
+    ASSERT_EQUAL(TwoOfDiamonds > AceOfClubs, false);
+    ASSERT_EQUAL(TwoOfDiamonds >= AceOfClubs, false);
     cout << "Passed Test 1!" << endl;
     // Test 2:
     Card AceOfDiamonds(ACE,DIAMONDS);
@@ -97,7 +97,7 @@ TEST(test_card_less) {
     // Test 3:
     Card FiveOfHearts(FIVE,HEARTS);
     Card TwoOfDiamonds(TWO,DIAMONDS);
-    ASSERT_EQUAL(Card_less(FiveOfHearts, TwoOfDiamonds, CLUBS), true);
+    ASSERT_EQUAL(Card_less(FiveOfHearts, TwoOfDiamonds, CLUBS), false);
     cout << "Passed Test 3!" << endl;
 }
 
