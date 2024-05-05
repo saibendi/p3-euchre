@@ -74,7 +74,7 @@ public:
                 }
             }
             if (counter > 0) {
-                order_up_suit = upcard_suit;
+                order_up_suit = next_suit;
                 return true;
             }
         }
@@ -84,10 +84,17 @@ public:
     //REQUIRES Player has at least one card
     //EFFECTS  Player adds one card to hand and removes one card from hand.
     virtual void add_and_discard(const Card &upcard) {
-        
+       int index_min = 0;
+        Card min = playerHand[0];
+        playerHand.push_back(upcard);
+        for(int i = 1; i < playerHand.size(); i++){
+            if (playerHand[i] < min) {
+                min = playerHand[i];
+                index_min = i;
+            }
+        }
+        playerHand.erase(playerHand.begin() + index_min);
     }
-    
-    
     
     //Spades is trump
     // 10 spades, J of hearts, 9 of spades, Ace of Spades, Ace of Clubs
@@ -238,8 +245,11 @@ public:
     //  not modify order_up_suit and return false.
     virtual bool make_trump(const Card &upcard, bool is_dealer,
                             int round, Suit &order_up_suit) const {
+        
+        //TODO: use is_dealer variable
+        
         Suit upcard_suit = upcard.get_suit();
-        Suit next_suit = upcard.get_suit(upcard_suit);
+        Suit next_suit = Suit_next(upcard_suit);
 
         if (round == 1) {
             int counter = 0;
@@ -269,11 +279,26 @@ public:
                 }
             }
             if (counter > 0) {
-                order_up_suit = upcard_suit;
+                order_up_suit = next_suit;
                 return true;
             }
         }
         return false;
+    }
+    
+    //REQUIRES Player has at least one card
+    //EFFECTS  Player adds one card to hand and removes one card from hand.
+    virtual void add_and_discard(const Card &upcard) {
+       int index_min = 0;
+        Card min = playerHand[0];
+        playerHand.push_back(upcard);
+        for(int i = 1; i < playerHand.size(); i++){
+            if (playerHand[i] < min) {
+                min = playerHand[i];
+                index_min = i;
+            }
+        }
+        playerHand.erase(playerHand.begin() + index_min);
     }
 
     //REQUIRES Player has at least one card
@@ -451,10 +476,4 @@ std::ostream & operator<<(std::ostream &os, const Player &p) {
  
  - player who won trick, is leader of next trick and leads next trick
  -
- 
- 
- 
- 
- 
- - TODO: need to fix comparison logic - if trump suit is hearts, and led suit is spades, then nine of diamonds is less than ace of clubs; suits are only used as a tie-breaker if ranks are the same, if ranks aren't the same, the suit doesn't matter just compare the rank
-*/
+ */

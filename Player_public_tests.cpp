@@ -83,12 +83,11 @@ TEST(test_simple_player_lead_card) {
   bob->add_card(Card(KING, SPADES));
   bob->add_card(Card(ACE, SPADES));
 
-    /*
   // Bob adds a card to his hand and discards one card
   bob->add_and_discard(
     Card(NINE, HEARTS) // upcard
   );
-*/
+    
   // Bob leads
   Card card_led = bob->lead_card(HEARTS);
 
