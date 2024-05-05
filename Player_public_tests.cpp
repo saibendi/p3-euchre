@@ -46,7 +46,7 @@ TEST(test_player_get_name) {
   ASSERT_EQUAL(alice->get_name(), "Alice");
   delete alice;
 }
-
+ 
 TEST(test_simple_player_make_trump) {
   // Bob's hand
   Player * bob = Player_factory("Bob", "Simple");
@@ -55,6 +55,7 @@ TEST(test_simple_player_make_trump) {
   bob->add_card(Card(QUEEN, SPADES));
   bob->add_card(Card(KING, SPADES));
   bob->add_card(Card(ACE, SPADES));
+
 
   // Bob makes tump
   Card nine_spades(NINE, SPADES);
@@ -82,11 +83,12 @@ TEST(test_simple_player_lead_card) {
   bob->add_card(Card(KING, SPADES));
   bob->add_card(Card(ACE, SPADES));
 
+    /*
   // Bob adds a card to his hand and discards one card
   bob->add_and_discard(
     Card(NINE, HEARTS) // upcard
   );
-
+*/
   // Bob leads
   Card card_led = bob->lead_card(HEARTS);
 

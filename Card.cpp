@@ -146,7 +146,18 @@ Suit Card::get_suit() const {
 //              - TEST 2:
 //              - TEST 3:
 Suit Card::get_suit(Suit trump) const {
-    assert(false);
+    if (trump == CLUBS) {
+        return SPADES;
+    }
+    else if (trump == SPADES) {
+        return CLUBS;
+    }
+    else if (trump == DIAMONDS) {
+        return HEARTS;
+    }
+    else {
+        return DIAMONDS;
+    }
 }
 
 //EFFECTS Returns true if card is a face card (Jack, Queen, King or Ace)
