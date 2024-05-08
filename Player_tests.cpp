@@ -4,7 +4,7 @@
 #include <iostream>
 
 using namespace std;
-/*
+
 TEST(test_player_get_name) {
     Player * alice = Player_factory("Alice", "Simple");
     ASSERT_EQUAL("Alice", alice->get_name());
@@ -55,15 +55,15 @@ TEST(test_make_trump_bob) {
     ASSERT_EQUAL(lead_card, Card(JACK, SPADES));
     cout << "Trick Taking: Bob leads with highest NON-TRUMP Card which is the JACK of SPADES!" << endl;
     
-    //Card play_card = kith->play_card(lead_card, trump);
-    //cout << play_card << endl;
-    //ASSERT_EQUAL(play_card, Card(JACK, CLUBS));
+    Card play_card = kith->play_card(lead_card, trump);
+    cout << play_card << endl;
+    ASSERT_EQUAL(play_card, Card(JACK, CLUBS));
  
     delete bob;
     delete kith;
 }
 // Add more tests here
-*/
+
 TEST(test_make_trump_Following_PDF ) {
     // Bob's hand
     Player * bob = Player_factory("Bob", "Simple");
