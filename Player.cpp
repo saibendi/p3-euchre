@@ -110,7 +110,13 @@ public:
 
             // OR can iterate through and compare each time
             // this implementation is to iterate using the loop for each function call
-    
+            
+            /* TODO: remove this; used for debugging
+            for (int i = 0; i < playerHand.size(); ++i) {
+                cout << playerName << "'s Card " << i+1 << " is: " << playerHand[i] << endl;
+            }
+             */
+
             Card maxTrump;
             Card maxNonTrump;
             int trumpCount = 0;
@@ -128,7 +134,7 @@ public:
                     }
                     // If trump count is higher than 0 so far
                     else {
-                        if (playerHand[i] > maxTrump) {
+                        if (Card_less(maxTrump, playerHand[i], trump)) {
                             maxTrump = playerHand[i];
                             trumpIndex = i;
                         }
@@ -142,7 +148,7 @@ public:
                         nonTrumpIndex = i;
                     }
                     else {
-                        if (playerHand[i] > maxNonTrump) {
+                        if (Card_less(maxNonTrump, playerHand[i], trump)) {
                             maxNonTrump = playerHand[i];
                             nonTrumpIndex = i;
                         }
@@ -150,12 +156,20 @@ public:
                     ++nonTrumpCount;        // counting to see if there actually is
                 }
             }
+            /* TODO: remove this; used for debugging
+            cout << "TRUMP Count is: " << trumpCount << endl;
+            cout << "NON TRUMP Count is: " << nonTrumpCount << endl;
+            cout << "TRUMP Index is: " << trumpIndex << endl;
+            cout << "TRUMP Card is: " << playerHand[trumpIndex] << endl;
+            cout << "NON TRUMP Index is: " << nonTrumpIndex << endl;
+            cout << "NON TRUMP Card is: " << playerHand[nonTrumpIndex] << endl;
+             */
             if (nonTrumpCount > 0) {
-                playerHand.erase(playerHand.begin() + trumpIndex);
+                playerHand.erase(playerHand.begin() + nonTrumpIndex);
                 return maxNonTrump;
             }
             else {
-                playerHand.erase(playerHand.begin() + nonTrumpIndex);
+                playerHand.erase(playerHand.begin() + trumpIndex);
                 return maxTrump;
             }
         }
@@ -175,7 +189,7 @@ public:
         }
          */
 
-        // Follow Simple Player leads with HIGHEST LED suit card, if no led suit cards, LOWEST CARD"
+        // Simple Player plays HIGHEST LED suit card, if no led suit cards, LOWEST CARD"
         if (playerHand.size() >= 1) {
             Card maxLed;
             Card minNonLed;
@@ -194,7 +208,7 @@ public:
                             maxLed_index = i;
                         }
                         else {
-                            if (playerHand[i] > maxLed) {
+                            if (Card_less(maxLed, playerHand[i], led_card, trump)) {
                                 maxLed = playerHand[i];
                                 maxLed_index = i;
                             }
@@ -209,7 +223,7 @@ public:
                             minNonLed_index = i;
                         }
                         else {
-                            if (playerHand[i] < minNonLed) {
+                            if (Card_less(playerHand[i], minNonLed, trump)) {
                                 minNonLed = playerHand[i];
                                 minNonLed_index = i;
                             }
@@ -217,6 +231,12 @@ public:
                         ++nonLedCount;
                     }
                 }
+            /* TODO: remove this; used for debugging
+            cout << "LED Count is: " << LedCount << endl;
+            cout << "NON LED Count is: " << nonLedCount << endl;
+            cout << "NON LED Index is: " << minNonLed_index << endl;
+            cout << "NON LED Card is: " << playerHand[minNonLed_index] << endl;
+             */
             if (LedCount > 0) {
                 playerHand.erase(playerHand.begin() + maxLed_index);
                 return maxLed;
