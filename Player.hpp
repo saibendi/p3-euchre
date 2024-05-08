@@ -49,6 +49,7 @@ class Player {
   // Maximum number of cards in a player's hand
   static const int MAX_HAND_SIZE = 5;
 
+    
   // Needed to avoid some compiler errors
   // NOTE: Do NOT write a destructor in the Player subclasses. The compiler-generated ones will work fine.
   virtual ~Player() {}

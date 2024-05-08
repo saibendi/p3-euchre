@@ -109,21 +109,28 @@ public:
             // so we would need to rearrange playerHand
 
             // OR can iterate through and compare each time
+            // this implementation is to iterate using the loop for each function call
     
             Card maxTrump;
             Card maxNonTrump;
             int trumpCount = 0;
             int nonTrumpCount = 0;
+            int trumpIndex = 0;
+            int nonTrumpIndex = 0;
             // iterate through all cards in player's hand
             for (int i = 0; i < playerHand.size(); ++i) {
                 // if card is trump
                 if (playerHand[i].is_trump(trump)) {
+                    // If trump count is 0 so far
                     if (trumpCount == 0) {
                         maxTrump = playerHand[i];    // sets new max
+                        trumpIndex = i;
                     }
+                    // If trump count is higher than 0 so far
                     else {
                         if (playerHand[i] > maxTrump) {
                             maxTrump = playerHand[i];
+                            trumpIndex = i;
                         }
                     }
                     ++trumpCount;
@@ -132,19 +139,23 @@ public:
                 else {
                     if (nonTrumpCount == 0) {
                         maxNonTrump = playerHand[i];
+                        nonTrumpIndex = i;
                     }
                     else {
                         if (playerHand[i] > maxNonTrump) {
                             maxNonTrump = playerHand[i];
+                            nonTrumpIndex = i;
                         }
                     }
                     ++nonTrumpCount;        // counting to see if there actually is
                 }
             }
             if (nonTrumpCount > 0) {
+                playerHand.erase(playerHand.begin() + trumpIndex);
                 return maxNonTrump;
             }
             else {
+                playerHand.erase(playerHand.begin() + nonTrumpIndex);
                 return maxTrump;
             }
         }
@@ -158,13 +169,21 @@ public:
     //EFFECTS  Plays one Card from Player's hand according to their strategy.
     //  The card is removed from the player's hand.
     virtual Card play_card(const Card &led_card, Suit trump) {
-        
+        /* TODO: remove later; using to debug
+        for (int i = 0; i < playerHand.size(); ++i) {
+            cout << playerName << "'s Card " << i+1 << " is: " << playerHand[i] << endl;
+        }
+         */
+
         // Follow Simple Player leads with HIGHEST LED suit card, if no led suit cards, LOWEST CARD"
         if (playerHand.size() >= 1) {
             Card maxLed;
             Card minNonLed;
             int LedCount = 0;
             int nonLedCount = 0;
+            int maxLed_index = 0;
+            int minNonLed_index = 0;
+
             // iterate through all cards in player's hand
             for (int i = 0; i < playerHand.size(); ++i) {
                 // if led suit card
@@ -172,10 +191,12 @@ public:
                     if (playerHand[i].get_suit() == led_card.get_suit()) {
                         if (LedCount == 0) {
                             maxLed = playerHand[i];    // sets new max
+                            maxLed_index = i;
                         }
                         else {
                             if (playerHand[i] > maxLed) {
                                 maxLed = playerHand[i];
+                                maxLed_index = i;
                             }
                         }
                         ++LedCount;
@@ -185,19 +206,23 @@ public:
                     else {
                         if (nonLedCount == 0) {
                             minNonLed = playerHand[i];
+                            minNonLed_index = i;
                         }
                         else {
                             if (playerHand[i] < minNonLed) {
                                 minNonLed = playerHand[i];
+                                minNonLed_index = i;
                             }
                         }
                         ++nonLedCount;
                     }
                 }
             if (LedCount > 0) {
+                playerHand.erase(playerHand.begin() + maxLed_index);
                 return maxLed;
             }
             else {
+                playerHand.erase(playerHand.begin() + minNonLed_index);
                 return minNonLed;
             }
             }
@@ -208,7 +233,7 @@ public:
     }
 
     static const int MAX_HAND_SIZE = 5;
-
+    
 private:
     string playerName;
     vector<Card> playerHand;
