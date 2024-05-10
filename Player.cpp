@@ -2,6 +2,7 @@
 #include "Card.hpp"
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
@@ -281,6 +282,7 @@ public:
         if (playerHand.size() < MAX_HAND_SIZE) {
             playerHand.push_back(c);
         }
+        sort(playerHand.begin(), playerHand.end());
     }
     
     void print_hand() const {
@@ -335,8 +337,12 @@ public:
             return;
         }
         else {
-            playerHand.push_back(upcard);
+            // first discard the card based on user input
             playerHand.erase(playerHand.begin() + response);
+            // then add the upcard to playerHand
+            playerHand.push_back(upcard);
+            // then sort the playerHand
+            sort(playerHand.begin(), playerHand.end());
         }
     }
 
@@ -349,7 +355,7 @@ public:
         print_hand();
         cout << "Human player " << playerName << ", please select a card:\n";
         cin >> response;
-        Card output = playerHand[response];
+        Card output = playerHand.at(response);
         playerHand.erase(playerHand.begin() + response);
         return output;
     }
@@ -362,7 +368,7 @@ public:
         print_hand();
         cout << "Human player " << playerName << ", please select a card:\n";
         cin >> response;
-        Card output = playerHand[response];
+        Card output = playerHand.at(response);
         playerHand.erase(playerHand.begin() + response);
         return output;
     }
