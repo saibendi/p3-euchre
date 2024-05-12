@@ -67,14 +67,20 @@ public:
         }
         else if (round == 2) {
             int counter = 0;
-            for (int i = 0; i <playerHand.size(); ++i) {
-                if (playerHand[i].get_suit() == next_suit) {
-                    if (playerHand[i].is_face_or_ace()) {
-                        ++counter;
+            if (is_dealer == false) {
+                for (int i = 0; i <playerHand.size(); ++i) {
+                    if (playerHand[i].get_suit() == next_suit) {
+                        if (playerHand[i].is_face_or_ace()) {
+                            ++counter;
+                        }
                     }
                 }
+                if (counter > 0) {
+                    order_up_suit = next_suit;
+                    return true;
+                }
             }
-            if (counter > 0) {
+            if (is_dealer == true) {
                 order_up_suit = next_suit;
                 return true;
             }

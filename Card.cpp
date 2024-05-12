@@ -437,10 +437,10 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump) {
     Suit card_a_suit = a.get_suit();
     Suit card_b_suit = b.get_suit();
     Suit led_card_suit = led_card.get_suit();
-    
     //assert(a != b && b != led_card && led_card != a);
     // Make sure that a, b and led_card are all different cards
-    if (a != b && b != led_card && led_card != a) {
+// REMOVED BELOW IF STATEMENT BC LED CARD IS SAME AS COMPARED CARD IN TRICK_WINNER()
+    //if (a != b && b != led_card && led_card != a) {
         // if at least one card is a trump card, then I don't care what the led_card suit is
         // this condition also takes care of when led_card suit == trump suit; if led_card suit is trump suit - I don't care about led card
         if (a.is_trump(trump) || b.is_trump(trump)) {
@@ -467,6 +467,6 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump) {
                     return false;
             }
         }
-    }
+    //}
     return false;
 }
