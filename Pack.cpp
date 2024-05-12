@@ -146,6 +146,26 @@ void Pack::shuffle() {
     // second half - EVEN
     // use PACK_SIZE - 1 = to get 23
         //
+    /*
+    int num_shuffles = 7;
+    std::array<Card, PACK_SIZE/2> first_half, second_half;
+
+    while (num_shuffles != 0){
+
+        for (int i = 0; i != PACK_SIZE/2; ++i){
+            first_half[i] = cards[i];
+            second_half[i] = cards[PACK_SIZE/2 + i];
+        }
+
+        for (int i = 0, j = 0; i != PACK_SIZE; i+=2, ++j){
+            cards[i] = second_half[j];
+            cards[i+1] = first_half[j];
+        }
+
+        --num_shuffles;
+    }
+    next = 0;
+     */
     
     const int NUM_TIMES_SHUFFLE = 7;
     array<Card, PACK_SIZE> temp_cards;         // creating a temp array to avoid the overwrite problem

@@ -204,12 +204,27 @@ public:
             int nonLedCount = 0;
             int maxLed_index = 0;
             int minNonLed_index = 0;
+            Suit led_suit = led_card.get_suit();
 
             // iterate through all cards in player's hand
             for (int i = 0; i < playerHand.size(); ++i) {
-                // if led suit card
-                    // then highest card
-                    if (playerHand[i].get_suit() == led_card.get_suit()) {
+                // if led suit card then highest card
+                    // if player hand has led suit and if led suit isn't trump, then you can't play left bower
+                    if (playerHand[i].get_suit() == led_suit && led_suit != trump && (!playerHand[i].is_left_bower(trump))) {
+                        if (LedCount == 0) {
+                            maxLed = playerHand[i];    // sets new max
+                            maxLed_index = i;
+                        }
+                        else {
+                            if (Card_less(maxLed, playerHand[i], led_card, trump)) {
+                                maxLed = playerHand[i];
+                                maxLed_index = i;
+                            }
+                        }
+                        ++LedCount;
+                    }
+                    // if player hand has led suit and if led suit is trump, then you CAN play left bower
+                    else if (playerHand[i].get_suit() == led_suit && led_suit == trump) {
                         if (LedCount == 0) {
                             maxLed = playerHand[i];    // sets new max
                             maxLed_index = i;

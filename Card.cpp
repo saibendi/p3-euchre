@@ -376,11 +376,16 @@ bool Card_less(const Card &a, const Card &b, Suit trump) {
     //assert(a != b);
     // Make sure that a and b aren't the same cards
     if (a != b) {
+        // TODO: remove below
+        // cout << "ENTERING CARD_LESS FUNC" << endl;
+
         // Card a is trump, Card b is trump
         // ex: let's say trump = clubs
         // right bower suit = clubs
         // left_bower suit = spades
         if (a.is_trump(trump) && b.is_trump(trump)) {
+            // TODO: remove below
+            // cout << "A and B are trump" << endl;
             if (a.is_right_bower(trump)) {  // if a is right bower, b cannot be greater than a
                 return false;
             }
@@ -407,16 +412,22 @@ bool Card_less(const Card &a, const Card &b, Suit trump) {
         // Card a is trump, Card b is NOT trump
         // if a is trump and b isn't, then a > b, so return false
         else if (a.is_trump(trump) && !(b.is_trump(trump))) {
+            // TODO: remove below
+            // cout << "A is trump" << endl;
             return false;
         }
         // Card a is NOT trump, Card b is trump
         // if a isn't trump and b is, then a < b, so return true
         else if (!(a.is_trump(trump)) && b.is_trump(trump)) {
+            // TODO: remove below
+            // cout << "B is trump" << endl;
             return true;
         }
         // Card a is NOT trump, Card b is NOT trump
         // if neither cards are trump, we just follow normal behavior
         else {
+            // TODO: remove below
+            // cout << "none are trump" << endl;
             if (a < b) {
                 return true;
             }
@@ -443,6 +454,9 @@ bool Card_less(const Card &a, const Card &b, const Card &led_card, Suit trump) {
     //if (a != b && b != led_card && led_card != a) {
         // if at least one card is a trump card, then I don't care what the led_card suit is
         // this condition also takes care of when led_card suit == trump suit; if led_card suit is trump suit - I don't care about led card
+    
+    // TODO: remove below
+    // cout << "ENTERING CARD_LESS_LED FUNC" << endl;
         if (a.is_trump(trump) || b.is_trump(trump)) {
             return Card_less(a, b, trump);
         }

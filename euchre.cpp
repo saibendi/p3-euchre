@@ -20,7 +20,7 @@ using namespace std;
 
 class Game {
 public:
-    Game(string name1, string name2, string name3, string name4, string type1, string type2, string type3, string type4, istream& pack_input, int points_user_input);
+    Game(string name1, string name2, string name3, string name4, string type1, string type2, string type3, string type4, istream& pack_input, int points_user_input, string shuffle_user_input);
     void play();
     void delete_players();
 
@@ -39,10 +39,10 @@ private:
 
 };
 
-Game::Game(string name1, string name2, string name3, string name4, string type1, string type2, string type3, string type4, istream& pack_input, int points_user_input) : players({Player_factory(name1, type1), Player_factory(name2, type2),
-    Player_factory(name3, type3), Player_factory(name4, type4)}),
-    points_to_win(points_user_input), pack(pack_input) {
+Game::Game(string name1, string name2, string name3, string name4, string type1, string type2, string type3, string type4, istream& pack_input, int points_user_input, string shuffle_user_input) : players({Player_factory(name1, type1), Player_factory(name2, type2),
+    Player_factory(name3, type3), Player_factory(name4, type4)}), shuffle_option(shuffle_user_input), points_to_win(points_user_input), pack(pack_input) {
         /*
+     TODO: why does pack(pack_input) need to be initialized after points_to_win(points_user_input)
      TODO: For some reason initializing custom ctor withint the brackets doesn't work
     points_to_win = points_user_input;
     cout << "test 1" << endl;
@@ -62,12 +62,66 @@ Game::Game(string name1, string name2, string name3, string name4, string type1,
      */
 }
 
-/*
+
 void Game::shuffle() {
-    pack.reset();
-    if (shuffle_option) {
+    if (shuffle_option == "shuffle") {
+        pack.reset();
         pack.shuffle();
     }
+    else if (shuffle_option == "noshuffle") {
+        pack.reset();
+    }
+ }
+/*
+void Game::deal(int dealer_position) {
+    int player_to_deal = dealer_position + 1;
+    int pattern = 2;
+    for (int i = 0; i != 4; ++i) {
+        if (player_to_deal > 3){
+            player_to_deal = 0;
+        }
+        if (pattern%2 == 0) {
+        players[player_to_deal]->add_card(pack.deal_one());
+        players[player_to_deal]->add_card(pack.deal_one());
+        players[player_to_deal]->add_card(pack.deal_one());
+        }
+        else if (pattern%2 == 1) {
+            players[player_to_deal]->add_card(pack.deal_one());
+            players[player_to_deal]->add_card(pack.deal_one());
+        }
+
+        ++player_to_deal;
+        ++pattern;
+    }
+
+    pattern = 2;
+    for (int i = 0; i != 4; ++i) {
+
+        if (player_to_deal > 3){
+            player_to_deal = 0;
+        }
+        if (pattern%2 == 0) {
+        players[player_to_deal]->add_card(pack.deal_one());
+        players[player_to_deal]->add_card(pack.deal_one());
+        }
+        else if (pattern%2 == 1) {
+            players[player_to_deal]->add_card(pack.deal_one());
+            players[player_to_deal]->add_card(pack.deal_one());
+            players[player_to_deal]->add_card(pack.deal_one());
+        }
+
+        ++player_to_deal;
+        ++pattern;
+    }
+
+
+    // for (int i = 0; i != 4; ++i){
+    //     print_hand(i);
+    // }
+
+    upcard = pack.deal_one();
+
+    cout << upcard.get_rank() << " of " << upcard.get_suit() << " turned up" << "\n";
 }
  */
 
@@ -108,7 +162,6 @@ void Game::deal(int hand_number, int dealer_index) {
         }
         ++deal_round;
     }
-    
     // output upcard
     upcard = pack.deal_one();
     cout << upcard << " turned up" << endl;
@@ -135,8 +188,8 @@ void Game::make_trump(int dealer_index, Suit &order_up_suit, int &order_up_playe
             else {
                 cout << players[player_index]->get_name() << " orders up " << order_up_suit << endl << endl;
                 order_up_player_index = player_index;
-                if (trump_round == 1) {
-                    players[player_index]->add_and_discard(upcard);
+                if (trump_round == 1) { 
+                    players[dealer_index]->add_and_discard(upcard);
                 }
                 return;
             }
@@ -149,11 +202,19 @@ void Game::make_trump(int dealer_index, Suit &order_up_suit, int &order_up_playe
 int Game::trick_winner(const vector<Card> trick_cards, Card led_card, Suit order_up_suit) {
     // set max to first card in vector
     // first card in vector is also the led_card
+    /* TODO: remove below
+    for (int i = 0; i < trick_cards.size(); ++i) {
+        cout << trick_cards[i] << endl;
+    }
+     */
     int winner_index = 0;
     Card max = trick_cards[winner_index];
     for (int i = 1; i < trick_cards.size(); ++i) {
+        // TODO: remove below
+        // cout << "Max card is: " << max << endl;
         if (Card_less(max, trick_cards[i], led_card, order_up_suit)) {
             winner_index = i;
+            max = trick_cards[winner_index];
         }
     }
     return winner_index;
@@ -238,7 +299,7 @@ void Game::play() {
     // EACH HAND:
         // one dealer per hand
         // 1. shuffle();
-        
+        shuffle();
         // 2. deal()
         deal(hand_number, dealer_index);
         
@@ -310,7 +371,7 @@ int main(int argc, char *argv[]) {
     }
     cout << endl;
 
-    Game game(argv[4], argv[6], argv[8], argv[10], argv[5], argv[7], argv[9], argv[11], fin, atoi(argv[3]));
+    Game game(argv[4], argv[6], argv[8], argv[10], argv[5], argv[7], argv[9], argv[11], fin, atoi(argv[3]), argv[2]);
     game.play();
     
     fin.close();
